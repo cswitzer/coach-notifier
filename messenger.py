@@ -1,6 +1,6 @@
 import os
-import requests
 import smtplib
+from email.message import EmailMessage
 
 
 from dotenv import load_dotenv
@@ -23,10 +23,26 @@ class Messenger:
     def send_email(self, subject, body):
         with smtplib.SMTP_SSL(SMTP_SERVER, SMTP_PORT) as server:
             server.login(SMTP_USER, SMTP_PASSWORD)
-            message = f"Subject: {subject}\n\n{body}"
-            server.sendmail(SMTP_USER, self.to, message)
+            message = self._construct_email(subject, body)
+            server.send_message(message)
+
+    def _construct_email(self, subject, body):
+        msg = EmailMessage()
+        msg["Subject"] = subject
+        msg["From"] = SMTP_USER
+        msg["To"] = self.to
+        msg.set_content(body)
+        return msg
 
 
 if __name__ == "__main__":
-    messenger = Messenger("chase@vssta.com")
-    messenger.send_email("Coach Notifier Test", "Hi, Chase!")
+    messenger = Messenger(TO_EMAIL)
+    body = """
+    Hi Lily,
+
+    This is a test email to confirm that the email functionality is working correctly. 
+    If you receive this, give me a million dollars!
+
+    From Chase
+    """
+    messenger.send_email("Important Update from Chase", body=body)
