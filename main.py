@@ -13,6 +13,9 @@ type TransmissionType = Literal["email"] | Literal["sms"]
 async def root(method: TransmissionType):
     """
     We should only send emails or SMS messages if the item is in stock.
+    I will do every 2 hours to avoid rate limiting. We will decrease the time if coach trusts us.
+
+    Product name: Teri Shoulder Bag With Sketch Print
     """
     if method == "email":
         return {"message": "Email transmission selected"}
