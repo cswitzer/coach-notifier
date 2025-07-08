@@ -1,7 +1,7 @@
 from lxml import etree
 import requests
 
-from consts import COACH_PRODUCT_SITEMAP
+from consts import COACH_PRODUCT_SITEMAP, LOCAL, BASE_DIR
 
 
 class CoachProductSitemapCrawler:
@@ -19,6 +19,11 @@ class CoachProductSitemapCrawler:
 
     def _fetch_sitemap(self) -> str:
         """Fetch the sitemap XML content."""
+        if LOCAL:
+            file_path = BASE_DIR / "sitemap_0-product.xml"
+            with open(file_path, "r", encoding="utf-8") as file:
+                return file.read()
+
         try:
             response = requests.get(self.url, timeout=30)
             response.raise_for_status()

@@ -3,9 +3,6 @@ import smtplib
 from email.message import EmailMessage
 import requests
 import os
-from dotenv import load_dotenv
-
-load_dotenv()
 
 # Environment variables
 SMTP_SERVER = os.getenv("SMTP_SERVER")
@@ -66,7 +63,8 @@ class SMSMessenger:
                 "key": TEXTBELT_API_KEY,
             },
         )
-        print(resp.json())
+        if resp.status_code != 200:
+            raise RuntimeError(f"Failed to send SMS: {resp.text}")
 
 
 # === Usage ===
